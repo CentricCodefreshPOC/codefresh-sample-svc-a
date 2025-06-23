@@ -81,11 +81,12 @@ jobs:
         id: vars
         run: |
           if [[ "${{ github.event_name }}" == "release" ]]; then
-            VERSION="${{ github.event.release.tag_name#v }}"
+            VERSION=$(jq -r .release.tag_name "$GITHUB_EVENT_PATH" | sed 's/^v//')
           else
             VERSION="${GITHUB_REF#refs/tags/v}"
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+
 
       - name: Install yq
         uses: mikefarah/yq@v4.43.1
